@@ -1,0 +1,98 @@
+Fetch the row from User table based on Id and Password.
+
+mysql> select *from User where user_password='abc' and user_id!='U1';
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Fetch all the rows from Note table based on the field note_creation_date.
+
+
+mysql> select * from Note where note_creation_date>'2019-03-28';
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Fetch all the Categories created after the particular Date.
+
+
+mysql> select * from Category where category_creation_date>'2016-01-02';
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Fetch all the Note ID from UserNote table for a given User.
+
+
+mysql> select note_id from usernote where user_id='U4';
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Write Update query to modify particular Note for the given note Id.
+
+
+mysql> update Note set note_content='Do the SQL assignment' where note_id='N1';
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Fetch all the Notes from the Note table by a particular User.
+
+
+using innerjoin:
+mysql> select n.note_id,note_title,note_content,note_status,note_creation_date from Note n inner join usernote un on n.note_id=un.note_id inner join User u on un.user_id=u.user_id where u.user_name='A';
+
+using SubQueries:
+mysql> select * from Note where note_id IN (select note_id from usernote where user_id IN (select user_id from User where user_name='A'));
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Fetch all the Notes from the Note table for a particular Category.
+
+
+using SubQueries:
+mysql> select * from Note where note_id IN (select note_id from NoteCategory where category_id IN (select category_id from Category where category_name='Programming'));
+
+
+using innerjoin:
+
+mysql> select n.note_id,n.note_title,n.note_content,n.note_status,n.note_creation_date from Note n inner join NoteCategory NC on n.note_id=NC.note_id inner join Category c on NC.category_id=c.category_id where category_name='Programming';
+
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Fetch all the reminder details for a given note id.
+
+
+using SubQueries:
+mysql> select * from Remainder where rem_id IN (select rem_id from NoteRemainder where note_id='N3');
+
+
+using InnerJoin:
+mysql> select R.rem_Id,R.rem_name,R.rem_descr,R.rem_type,R.rem_crtn_date,R.rem_creator from Remainder R inner join NoteRemainder NR on R.rem_id=NR.rem_id where NR.note_id='N3';
+
+
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Fetch the reminder details for a given reminder id.
+
+
+mysql> select * from Remainder where rem_id='R3';
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Write a query to create a new Note from particular User (Use Note and UserNote tables - insert statement).
+
+
+
+mysql> insert into User values("U6","E",'2009-08-24',"efg",123457896);         
+mysql> insert into Note values("N6","DataMunger1","COmplete the step-1 assignment","COmpleted",'2019-08-24');
+mysql> insert into usernote values("UN6","U6","N6");
+
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Write a query to create a new Note from particular User to particular Category(Use Note and NoteCategory tables - insert statement)
+
+mysql> insert into Category values("C6","Programming","We are using Java",'2014-02-24',"noob");
+mysql> insert into Note values ("N7","JavaBasics","Complete the assignment","Completed",'2019-07-21');
+mysql> insert into NoteCategory values("NC6","N6","C6");
+
+
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Write a query to set a reminder for a particular note (Use Reminder and NoteReminder tables - insert statement)
+
+mysql> insert into Remainder values("R6","DataMunger1 Deadline","Do the DataMunger1 assignment before the deadline","Critical",'2019-03-25','fgh');
+mysql> insert into NoteRemainder values("NR6","N6","R6");
+
+
+
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Write a query to delete particular Note added by a User(Note and UserNote tables - delete statement)
+
+
+mysql> delete User,usernote,Note from User inner join usernote on User.user_id=usernote.user_id inner join Note on Note.note_id=usernote.note_id where User.user_id="US1" and Note.note_title="DB";
+
+
+
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Write a query to delete particular Note from particular Category(Note and NoteCategory tables - delete statement)
+
+mysql> delete Note,NoteCategory,Category from Note inner join NoteCategory on Note.note_id=NoteCategory.category_id inner join Category on Category.category_id=NoteCategory.note_id where Note.note_id="N1" and Category.category_name="DataBase";
